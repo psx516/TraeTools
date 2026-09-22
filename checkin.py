@@ -138,7 +138,7 @@ def main():
         sys.exit(1)
 
     webhook = os.environ.get("FEISHU_WEBHOOK", "").strip()
-    meowtoken = os.environ.get("meowtoken", "").strip()
+    meowtoken = os.environ.get("MEOWTOKEN", "").strip()
     ok_names, fail_names = [], []
     all_ok = True
 
