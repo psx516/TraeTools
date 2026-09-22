@@ -98,7 +98,7 @@ def notify_meow(meowtoken, text):
     if not meowtoken:
         return None
     try:
-        payload = json.dumps({"msg_type": "text", "content": {"text": text}}).encode("utf-8")
+        payload = json.dumps({"title": "TRAE签到通知", "msg": text}).encode("utf-8")
         req = urllib.request.Request(meowtoken, data=payload, headers={"Content-Type": "application/json"}, method="POST")
         with urllib.request.urlopen(req, timeout=15) as resp:
             return resp.status
@@ -164,6 +164,7 @@ def main():
                 time.sleep(random.uniform(0.8, 1.5))
                 result = checkin(token, device_id)
                 body = result["body"]
+                print("body是[%s]" % (body))
                 code = body.get("code", -1)
             checked = body.get("checked_in", False)
             ok = (result["http"] == 200) and (code == 0 or checked)
