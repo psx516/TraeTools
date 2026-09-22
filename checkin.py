@@ -164,10 +164,10 @@ def main():
                 time.sleep(random.uniform(0.8, 1.5))
                 result = checkin(token, device_id)
                 body = result["body"]
-                print("body是[%s]" % (body))
                 code = body.get("code", -1)
             checked = body.get("checked_in", False)
             ok = (result["http"] == 200) and (code == 0 or checked)
+            print("body是[%s]" % (body))
             credits = body.get("credits", 0)
             if ok:
                 print("[%s] 签到成功，本次获得：%s 积分" % (name, credits))
