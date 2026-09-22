@@ -93,6 +93,18 @@ def notify_feishu(webhook, text):
     except Exception:
         return None
 
+def notify_meow(meowtoken, text):
+    """向meow推送一条文本消息；webhook 为空则跳过。返回 HTTP 状态码，失败返回 None。"""
+    if not meowtoken:
+        return None
+    try:
+        payload = json.dumps({"msg_type": "text", "content": {"text": text}}).encode("utf-8")
+        req = urllib.request.Request(meowtoken, data=payload, headers={"Content-Type": "application/json"}, method="POST")
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.status
+    except Exception:
+        return None
+
 
 def beijing_now_str():
     """返回北京时间字符串（GitHub Actions 运行在 UTC，需 +8 小时）。"""
@@ -126,6 +138,7 @@ def main():
         sys.exit(1)
 
     webhook = os.environ.get("FEISHU_WEBHOOK", "").strip()
+    meowtoken = os.environ.get("meowtoken", "").strip()
     ok_names, fail_names = [], []
     all_ok = True
 
@@ -176,6 +189,8 @@ def main():
         summary.append("失败：" + "、".join(fail_names))
     if webhook and (ok_names or fail_names):
         notify_feishu(webhook, "\n".join(summary))
+    if meowtoken and (ok_names or fail_names):
+        notify_meow(meowtoken,"\n".join(summary))
 
     if not all_ok:
         sys.exit(1)
